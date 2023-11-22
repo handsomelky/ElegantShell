@@ -62,6 +62,7 @@ int main(void) {
     pid_t pid;
 
     bst_insert(&bst_root, "hello", hello);
+    bst_insert(&bst_root, "tree", mytree);
 
     while(1) {
         prompt();
