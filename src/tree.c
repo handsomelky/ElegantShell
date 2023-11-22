@@ -20,7 +20,7 @@ int insensitiveCompare(const void *a, const void *b) {
     return strcasecmp(str1, str2);
 }
 
-void printTree(const char *basePath, int depth, int isLastInParent, int *dirCount, int *fileCount) {
+void printTree(const char *basePath, int depth, int isLast[], int *dirCount, int *fileCount) {
     DIR *dir = opendir(basePath);
     if (!dir) return;
 
@@ -36,17 +36,12 @@ void printTree(const char *basePath, int depth, int isLastInParent, int *dirCoun
     }
 
     closedir(dir);
-
     // 对文件名的首字母进行排序
     qsort(entries, count, sizeof(char*), insensitiveCompare);
 
     for (int i = 0; i < count; i++) {
         for (int j = 0; j < depth; j++) {
-            if (j == depth - 1 && isLastInParent) {
-                printf("    "); // 如果是当前子目录的最后一个文件，则需要将前面的树状结构空出来
-            } else {
-                printf("│   ");
-            }
+            printf(isLast[j] ? "    " : "│   ");// 如果是当前子目录的最后一个文件，则需要将前面的树状结构空出来
         }
 
         printf("%s ", i == count - 1 ? "└──" : "├──");
@@ -56,11 +51,12 @@ void printTree(const char *basePath, int depth, int isLastInParent, int *dirCoun
         struct stat statbuf;
         stat(fullPath, &statbuf);
 
-        // 根据文件类型来决定显示结果的颜色
+         // 根据文件类型来决定显示结果的颜色
         if (S_ISDIR(statbuf.st_mode)) {
             printf("%s%s%s\n", COLOR_BLUE, entries[i], COLOR_RESET);
             (*dirCount)++;
-            printTree(fullPath, depth + 1, i == count - 1, dirCount, fileCount);
+            isLast[depth] = (i == count - 1);
+            printTree(fullPath, depth + 1, isLast, dirCount, fileCount);
         } else {
             printf("%s%s%s\n", (statbuf.st_mode & S_IXUSR) ? COLOR_GREEN : "", entries[i], COLOR_RESET);
             (*fileCount)++;
@@ -70,6 +66,7 @@ void printTree(const char *basePath, int depth, int isLastInParent, int *dirCoun
     }
 }
 
+
 int mytree(int argc, char **argv) {
     char *dir;
     if (argc >= 2) {
@@ -77,11 +74,12 @@ int mytree(int argc, char **argv) {
     } else {
         dir = ".";
     }
-
     // 统计目录和文件的个数
     int dirCount = 0, fileCount = 0;
+    int isLast[MAX_ENTRIES] = {0};
     printf("%s%s%s\n", COLOR_BLUE, dir, COLOR_RESET);
-    printTree(dir, 0, 0, &dirCount, &fileCount);
+    printTree(dir, 0, isLast, &dirCount, &fileCount);
     printf("\n%s%d directories, %d files%s\n", COLOR_ORANGE, dirCount, fileCount, COLOR_RESET);
     return 0;
 }
+
