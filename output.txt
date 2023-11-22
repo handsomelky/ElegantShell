@@ -1,0 +1,28 @@
+.
+[34m.[0m
+├── [34mbuild[0m
+│   ├── bst.o[0m
+│   ├── hello.o[0m
+│   ├── io_redirect.o[0m
+│   ├── main.o[0m
+│   ├── pwd.o[0m
+│   └── tree.o[0m
+├── [32mElegantShell[0m
+├── input.txt[0m
+├── Makefile[0m
+├── output.txt[0m
+└── [34msrc[0m
+    ├── bst.c[0m
+    ├── bst.h[0m
+    ├── hello.c[0m
+    ├── hello.h[0m
+    ├── io_redirect.c[0m
+    ├── io_redirect.h[0m
+    ├── main.c[0m
+    ├── main.h[0m
+    ├── pwd.c[0m
+    ├── pwd.h[0m
+    ├── tree.c[0m
+    └── tree.h[0m
+
+[33m2 directories, 22 files[0m

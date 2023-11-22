@@ -74,6 +74,7 @@ int mytree(int argc, char **argv) {
     } else {
         dir = ".";
     }
+    printf("%s\n",dir);
     // 统计目录和文件的个数
     int dirCount = 0, fileCount = 0;
     int isLast[MAX_ENTRIES] = {0};

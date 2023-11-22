@@ -5,5 +5,6 @@
 // 指令
 #include "hello.h"
 #include "tree.h"
+#include "io_redirect.h"
 
 #endif

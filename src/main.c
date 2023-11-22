@@ -75,6 +75,9 @@ int main(void) {
             exit(0);
         }
 
+        int saved_stdout, saved_stdin;
+        handle_io_redirection(&cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin);
+
         BST_NODE *np;
         np = bst_search(bst_root, cmd.globres.gl_pathv[0]);
         if(np != NULL) {
@@ -96,6 +99,14 @@ int main(void) {
                 wait(NULL);
             }
         }
+        // 清空输出缓存区
+        fflush(stdout);
+        // 恢复原始的标准输出和输入
+        dup2(saved_stdout, STDOUT_FILENO);
+        dup2(saved_stdin, STDIN_FILENO);
+        close(saved_stdout);
+        close(saved_stdin);
+
         puts("");
     }
     exit(0);
