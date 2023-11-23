@@ -5,6 +5,9 @@
 // 指令
 #include "hello.h"
 #include "tree.h"
+#include "wc.h"
+
+//输入输出重定向
 #include "io_redirect.h"
 
 #endif

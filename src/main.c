@@ -63,6 +63,7 @@ int main(void) {
 
     bst_insert(&bst_root, "hello", hello);
     bst_insert(&bst_root, "tree", mytree);
+    bst_insert(&bst_root, "wc", wc);
 
     while(1) {
         prompt();

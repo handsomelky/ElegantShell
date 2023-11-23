@@ -70,7 +70,8 @@ int handle_io_redirection(int *argc, char *argv[], int *saved_stdout, int *saved
                 token = strtok(NULL, "\n");
             }
 
-            argv[*argc] = NULL;  // 确保 argv 结尾为 NULL
+            // argv[*argc] = NULL;  // 确保 argv 结尾为 NULL
+
             return 0;  // 成功处理输入重定向
         }
         
