@@ -70,13 +70,17 @@ int main(void) {
         if(getline(&linebuf, &linebuf_size, stdin) < 0) {
             break;
         }
-
+        
         parse(linebuf, &cmd);
         if(strcmp(cmd.globres.gl_pathv[0], "exit") == 0) {
             exit(0);
         }
 
         int saved_stdout, saved_stdin;
+        if (handle_pipe(cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin)) {
+            continue;
+        }
+
         handle_io_redirection(&cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin);
 
         BST_NODE *np;
