@@ -4,12 +4,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 
 #include "io_redirect.h"
 
 #define MAX_FILE_SIZE 1024  // 假设输入文件内容不超过1024字节
 
-int handle_io_redirection(int *argc, char *argv[], int *saved_stdout, int *saved_stdin) {
+int handle_io_redirection(size_t *argc, char *argv[], int *saved_stdout, int *saved_stdin) {
     *saved_stdout = dup(STDOUT_FILENO);
     *saved_stdin = dup(STDIN_FILENO);
     int i;

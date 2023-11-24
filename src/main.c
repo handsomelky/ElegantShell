@@ -13,6 +13,7 @@ BST_NODE *bst_root = NULL;
 
 struct cmd_st {
     glob_t globres;
+    int background;
 };
 
 static void prompt(void) {
@@ -49,6 +50,13 @@ static void parse(char *line, struct cmd_st *res) {
             break;
         if(tok[0] == '\0')
             continue;
+
+        // 检测后台运行程序
+        if(i != 0 && strcmp(tok, "&") == 0) {
+            res->background = 1; 
+            continue;
+        }
+
         glob(tok, GLOB_NOCHECK|GLOB_APPEND*i, NULL, &res->globres);
         i = 1;
     }
@@ -76,43 +84,55 @@ int main(void) {
             exit(0);
         }
 
-        int saved_stdout, saved_stdin;
-        if (handle_pipe(cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin)) {
-            continue;
-        }
-
-        handle_io_redirection(&cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin);
-
-        BST_NODE *np;
-        np = bst_search(bst_root, cmd.globres.gl_pathv[0]);
-        if(np != NULL) {
-            np->handler(cmd.globres.gl_pathc, cmd.globres.gl_pathv);
-        }
-
-
-        else {
+        if(cmd.background == 1) {
             pid = fork();
-            if(pid < 0) {
-                perror("fork()");
-                exit(1);
-            }
             if(pid == 0) {
+                // Child process
                 execvp(cmd.globres.gl_pathv[0], cmd.globres.gl_pathv);
                 perror("execvp()");
                 exit(1);
             } else {
-                wait(NULL);
+                printf("Running in background, PID: %d\n", pid);
             }
-        }
-        // 清空输出缓存区
-        fflush(stdout);
-        // 恢复原始的标准输出和输入
-        dup2(saved_stdout, STDOUT_FILENO);
-        dup2(saved_stdin, STDIN_FILENO);
-        close(saved_stdout);
-        close(saved_stdin);
+        }else {
+            int saved_stdout, saved_stdin;
+            if (handle_pipe(cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin)) {
+                continue;
+            }
 
-        puts("");
+            handle_io_redirection(&cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin);
+
+            BST_NODE *np;
+            np = bst_search(bst_root, cmd.globres.gl_pathv[0]);
+            if(np != NULL) {
+                np->handler(cmd.globres.gl_pathc, cmd.globres.gl_pathv);
+            }
+
+            else {
+                pid = fork();
+                if(pid < 0) {
+                    perror("fork()");
+                    exit(1);
+                }
+                if(pid == 0) {
+                    execvp(cmd.globres.gl_pathv[0], cmd.globres.gl_pathv);
+                    perror("execvp()");
+                    exit(1);
+                } else {
+                    wait(NULL);
+                }
+            }
+            // 清空输出缓存区
+            fflush(stdout);
+            // 恢复原始的标准输出和输入
+            dup2(saved_stdout, STDOUT_FILENO);
+            dup2(saved_stdin, STDIN_FILENO);
+            close(saved_stdout);
+            close(saved_stdin);
+
+            puts("");
+        }
+        
     }
     exit(0);
 }
