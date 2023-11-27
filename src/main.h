@@ -11,5 +11,16 @@
 #include "io_redirect.h"
 //管道
 #include "pipe.h"
+//ls
+#include "ls.h"
+//cd
+#include "cd.h"
+//pwd
+#include "pwd.h"
+//clear
+#include "clear.h"
+//history
+#include "history.h"
+
 
 #endif
