@@ -19,8 +19,7 @@
 #include "pwd.h"
 //clear
 #include "clear.h"
-//history
-#include "history.h"
+
 
 
 #endif
