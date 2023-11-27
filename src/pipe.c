@@ -114,7 +114,7 @@ int handle_pipe(char *linebuf, BST_NODE *bst_root,pid_t pid, int *saved_stdout, 
             fflush(stdout);
             close(pipefd[0]);
             // 执行管道后半部分的命令
-            execvp(right_cmd.globres.gl_pathv[0], &right_cmd.globres.gl_pathv);
+            execvp(right_cmd.globres.gl_pathv[0], right_cmd.globres.gl_pathv);
 
             perror("execvp");
             exit(EXIT_FAILURE);
