@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#define DELIMS " \t\n"
+#define DELIMS " \t\n" 
 BST_NODE *bst_root = NULL;
 
 struct cmd_st {
