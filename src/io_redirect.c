@@ -15,6 +15,7 @@ int handle_io_redirection(size_t *argc, char *argv[], int *saved_stdout, int *sa
     *saved_stdin = dup(STDIN_FILENO);
     int i;
     char inputStr[MAX_FILE_SIZE]; 
+
     for (i = 0; i < *argc; i++) {
         // 标准输出重定向
         if (strcmp(argv[i], ">") == 0) {  

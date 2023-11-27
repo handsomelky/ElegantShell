@@ -3,18 +3,14 @@
 #include <unistd.h>
 #include <string.h>
 #include <glob.h>
+#include <sys/types.h>
 #include <sys/wait.h>
-#include <time.h>
 
 #include "main.h"
 
 #define DELIMS " \t\n" 
 BST_NODE *bst_root = NULL;
 
-struct cmd_st {
-    glob_t globres;
-    int background;
-};
 
 static void prompt(void) {
     //char *currentDir = getenv("PWD");   获取的是环境路径，而不是当前
@@ -26,6 +22,8 @@ static void prompt(void) {
         perror("getcwd");
         exit(EXIT_FAILURE);
     }
+
+
     if(currentDir == NULL || homeDir == NULL) {
         perror("getenv()");
         exit(1);
@@ -85,7 +83,12 @@ int main(void) {
         if(getline(&linebuf, &linebuf_size, stdin) < 0) {
             break;
         }
+
+        char *line_ori;
+        line_ori = (char*)malloc(strlen(linebuf)*sizeof(char));
+        strcpy(line_ori, (const char*)linebuf);
         parse(linebuf, &cmd);
+
         if(strcmp(cmd.globres.gl_pathv[0], "exit") == 0) {
             exit(0);
         }
@@ -101,42 +104,14 @@ int main(void) {
                 printf("Running in background, PID: %d\n", pid);
             }
         }else {
+
             int saved_stdout, saved_stdin;
-            if (handle_pipe(cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin)) {
+            
+            if (handle_pipe(line_ori,bst_root,pid, &saved_stdout, &saved_stdin)) {
                 continue;
             }
 
-            handle_io_redirection(&cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin);
-
-            BST_NODE *np;
-            np = bst_search(bst_root, cmd.globres.gl_pathv[0]);
-            if(np != NULL) {
-                np->handler(cmd.globres.gl_pathc, cmd.globres.gl_pathv);
-            }
-
-            else {
-                pid = fork();
-                if(pid < 0) {
-                    perror("fork()");
-                    exit(1);
-                }
-                if(pid == 0) {
-                    execvp(cmd.globres.gl_pathv[0], cmd.globres.gl_pathv);
-                    perror("execvp()");
-                    exit(1);
-                } else {
-                    wait(NULL);
-                }
-            }
-            // 清空输出缓存区
-            fflush(stdout);
-            // 恢复原始的标准输出和输入
-            dup2(saved_stdout, STDOUT_FILENO);
-            dup2(saved_stdin, STDIN_FILENO);
-            close(saved_stdout);
-            close(saved_stdin);
-
-            puts("");
+            execute_command(cmd,bst_root,pid,&saved_stdout,&saved_stdin);
         }
         
     }
