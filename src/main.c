@@ -8,22 +8,26 @@
 
 #include "main.h"
 
-#define DELIMS " \t\n"
+#define DELIMS " \t\n" 
 BST_NODE *bst_root = NULL;
 
 
 static void prompt(void) {
-    char *currentDir = getenv("PWD");
+    //char *currentDir = getenv("PWD");   获取的是环境路径，而不是当前
     char *homeDir = getenv("HOME");
     char hostname[128];
     char username[128];
+    char currentDir[1024];
+    if(getcwd(currentDir, sizeof(currentDir)) == NULL){
+        perror("getcwd");
+        exit(EXIT_FAILURE);
+    }
 
 
     if(currentDir == NULL || homeDir == NULL) {
         perror("getenv()");
         exit(1);
     }
-
     // 使用 ~ 替换 home 路径
     if(strncmp(currentDir, homeDir, strlen(homeDir)) == 0) {
         char tempPath[128];
@@ -69,6 +73,10 @@ int main(void) {
     bst_insert(&bst_root, "hello", hello);
     bst_insert(&bst_root, "tree", mytree);
     bst_insert(&bst_root, "wc", wc);
+    bst_insert(&bst_root, "ls", ls);
+    bst_insert(&bst_root, "cd", cd);
+    bst_insert(&bst_root, "pwd", pwd);
+    bst_insert(&bst_root, "clear", clear);
 
     while(1) {
         prompt();
@@ -109,3 +117,4 @@ int main(void) {
     }
     exit(0);
 }
+
