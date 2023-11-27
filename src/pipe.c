@@ -43,7 +43,6 @@ int handle_pipe(char *linebuf, BST_NODE *bst_root,pid_t pid, int *saved_stdout, 
 
     // 如果没有找到管道，返回0
     if (!pipe_symbol) {
-        puts(linebuf);
         return 0;
     }
 

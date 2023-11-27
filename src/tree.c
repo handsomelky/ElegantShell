@@ -55,26 +55,29 @@ void printTree(const char *basePath, int depth, int isLast[], int *dirCount, int
     qsort(entries, count, sizeof(char*), insensitiveCompare);
 
     for (int i = 0; i < count; i++) {
+
+        char fullPath[1024];
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", basePath, entries[i]);
+        struct stat statbuf;
+        stat(fullPath, &statbuf);
+        // 当'-d'被设定时，会跳过文件的显示
+
+        if (dirsOnly && !S_ISDIR(statbuf.st_mode)) {
+            continue;
+        }
+
+        if (!showHidden && entries[i][0] == '.') {
+            continue;
+        }
         for (int j = 0; j < depth; j++) {
             printf(isLast[j] ? "    " : "│   ");// 如果是当前子目录的最后一个文件，则需要将前面的树状结构空出来
         }
 
         printf("%s ", i == count - 1 ? "└──" : "├──");
 
-        char fullPath[1024];
-        snprintf(fullPath, sizeof(fullPath), "%s/%s", basePath, entries[i]);
-        struct stat statbuf;
-        stat(fullPath, &statbuf);
-
-        // 当'-d'被设定时，会跳过文件的显示
-        if (dirsOnly && !S_ISDIR(statbuf.st_mode)) {
-            continue;
-        }
 
         // 决定是否显示隐藏文件
-        if (!showHidden && entries[i][0] == '.') {
-            continue;
-        }
+
 
          // 根据文件类型来决定显示结果的颜色
         if (S_ISDIR(statbuf.st_mode)) {
@@ -124,13 +127,16 @@ int mytree(int argc, char **argv) {
         }
     }
 
-    printf("%s\n",dir);
     // 统计目录和文件的个数
     int dirCount = 0, fileCount = 0;
     int isLast[MAX_ENTRIES] = {0};
     printf("%s%s%s\n", COLOR_BLUE, dir, COLOR_RESET);
     printTree(dir, 0, isLast, &dirCount, &fileCount,showHidden,dirsOnly, maxDepth);
-    printf("\n%s%d directories, %d files%s\n", COLOR_ORANGE, dirCount, fileCount, COLOR_RESET);
+    if (dirsOnly) {
+        printf("\n%s%d directories%s\n", COLOR_ORANGE, dirCount, COLOR_RESET);
+    } else {
+        printf("\n%s%d directories, %d files%s\n", COLOR_ORANGE, dirCount, fileCount, COLOR_RESET);
+    }    
     return 0;
 }
 
