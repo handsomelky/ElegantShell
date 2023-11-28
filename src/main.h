@@ -23,6 +23,8 @@
 #include "pipe.h"
 
 
-
+#include "cp.h"
+#include "mv.h"
+#include "rm.h"
 
 #endif
