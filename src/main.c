@@ -79,6 +79,10 @@ int main(void) {
     bst_insert(&bst_root, "clear", clear);
     bst_insert(&bst_root, "help", display_help);
     bst_insert(&bst_root, "ps", print_process_info);
+    bst_insert(&bst_root, "_cp", my_cp);
+    bst_insert(&bst_root, "_mv", my_mv);
+    bst_insert(&bst_root, "_rm", my_rm);
+
 
     while(1) {
         prompt();
