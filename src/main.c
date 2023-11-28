@@ -77,12 +77,17 @@ int main(void) {
     bst_insert(&bst_root, "cd", cd);
     bst_insert(&bst_root, "pwd", pwd);
     bst_insert(&bst_root, "clear", clear);
+    bst_insert(&bst_root, "help", display_help);
+    bst_insert(&bst_root, "ps", print_process_info);
 
     while(1) {
         prompt();
         if(getline(&linebuf, &linebuf_size, stdin) < 0) {
             break;
         }
+
+        //将命令添加到历史记录
+        add_to_history(linebuf);
 
         char *line_ori;
         line_ori = (char*)malloc(strlen(linebuf)*sizeof(char));
@@ -91,6 +96,12 @@ int main(void) {
 
         if(strcmp(cmd.globres.gl_pathv[0], "exit") == 0) {
             exit(0);
+        }
+
+        // 处理显示历史记录的命令 
+        if (strcmp(cmd.globres.gl_pathv[0], "history") == 0) { 
+        	display_history(); 
+        	continue; // 继续下一次循环，不执行后续的命令处理步骤 
         }
 
         if(cmd.background == 1) {

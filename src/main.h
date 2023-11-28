@@ -9,6 +9,13 @@
 #include "hello.h"
 #include "tree.h"
 #include "wc.h"
+#include "ls.h"
+#include "cd.h"
+#include "pwd.h"
+#include "clear.h"
+#include "history.h"
+#include"ps.h"
+#include"help.h"
 
 //输入输出重定向
 #include "io_redirect.h"
@@ -22,6 +29,8 @@
 #include "pwd.h"
 //clear
 #include "clear.h"
+
+
 
 
 

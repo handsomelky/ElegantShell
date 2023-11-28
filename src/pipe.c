@@ -89,12 +89,13 @@ int handle_pipe(char *linebuf, BST_NODE *bst_root,pid_t pid, int *saved_stdout, 
         perror("execvp");
         exit(EXIT_FAILURE);
         // execute_command(left_cmd,bst_root,pid3,saved_stdout,saved_stdin);
+        // exit(1);
         
 
         
     } else {
         // 父进程
-
+        waitpid(pid1, NULL, 0);
         close(pipefd[1]); 
 
         // 创建第二个子进程
@@ -114,12 +115,12 @@ int handle_pipe(char *linebuf, BST_NODE *bst_root,pid_t pid, int *saved_stdout, 
             fflush(stdout);
             close(pipefd[0]);
             // 执行管道后半部分的命令
-            execvp(right_cmd.globres.gl_pathv[0], &right_cmd.globres.gl_pathv);
+            execvp(right_cmd.globres.gl_pathv[0], right_cmd.globres.gl_pathv);
 
             perror("execvp");
             exit(EXIT_FAILURE);
             // execute_command(right_cmd,bst_root,pid4,saved_stdout,saved_stdin);
-            
+            // exit(1);
 
         } else {
             // 父进程继续
@@ -127,7 +128,7 @@ int handle_pipe(char *linebuf, BST_NODE *bst_root,pid_t pid, int *saved_stdout, 
             
         }
         // 等待两个子进程完成
-        waitpid(pid1, NULL, 0);
+        
         waitpid(pid2, NULL, 0);
         return 1;
     }
