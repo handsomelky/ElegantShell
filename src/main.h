@@ -16,12 +16,12 @@
 #include "history.h"
 #include"ps.h"
 #include"help.h"
+#include "mkdir.h"
 
 //输入输出重定向
 #include "io_redirect.h"
 //管道
 #include "pipe.h"
-//管道
-#include "mkdir.h"
+
 
 #endif
