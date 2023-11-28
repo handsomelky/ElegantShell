@@ -79,6 +79,7 @@ int main(void) {
     bst_insert(&bst_root, "clear", clear);
     bst_insert(&bst_root, "help", display_help);
     bst_insert(&bst_root, "ps", print_process_info);
+    bst_insert(&bst_root, "mkdir", my_mkdir);
 
     while(1) {
         prompt();
