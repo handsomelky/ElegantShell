@@ -12,7 +12,6 @@
 #include "ls.h"
 #include "cd.h"
 #include "pwd.h"
-#include "clear.h"
 #include "history.h"
 #include"ps.h"
 #include"help.h"
@@ -21,7 +20,9 @@
 #include "io_redirect.h"
 //管道
 #include "pipe.h"
-//管道
 #include "mkdir.h"
+#include "echo.h"
+#include "cat.h"
+
 
 #endif
