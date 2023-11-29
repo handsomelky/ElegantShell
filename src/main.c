@@ -78,9 +78,13 @@ int main(void) {
     bst_insert(&bst_root, "pwd", pwd);
     bst_insert(&bst_root, "help", display_help);
     bst_insert(&bst_root, "ps", print_process_info);
-    bst_insert(&bst_root, "mkdir", my_mkdir);
     bst_insert(&bst_root, "my_echo", my_echo);
     bst_insert(&bst_root, "my_cat", cat);
+    bst_insert(&bst_root, "_cp", my_cp);
+    bst_insert(&bst_root, "_mv", my_mv);
+    bst_insert(&bst_root, "_rm", my_rm);
+    bst_insert(&bst_root, "mkdir", my_mkdir);
+
     while(1) {
         prompt();
         if(getline(&linebuf, &linebuf_size, stdin) < 0) {
