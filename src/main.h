@@ -12,7 +12,6 @@
 #include "ls.h"
 #include "cd.h"
 #include "pwd.h"
-#include "clear.h"
 #include "history.h"
 #include"ps.h"
 #include"help.h"
@@ -20,11 +19,15 @@
 #include "cp.h"
 #include "mv.h"
 #include "rm.h"
+#include "mkdir.h"
+#include "echo.h"
+#include "cat.h"
 
 //输入输出重定向
 #include "io_redirect.h"
 //管道
 #include "pipe.h"
+
 
 #endif
 
