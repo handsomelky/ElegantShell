@@ -104,6 +104,7 @@ void print_help_my_mkdir() {
     printf("Usage: my_mkdir [OPTIONS] <directory_name>\n");
     printf("Create one or more directories.\n\n");
 
+
     printf("Options:\n");
     printf("  -p: Create parent directories as needed\n");
     printf("  <directory_name>: The name of the directory to create\n");
@@ -121,6 +122,7 @@ void print_help_my_mv() {
     printf("  <source>: The file or directory to move\n");
     printf("  <destination>: The destination path for the move operation\n");
 }
+
 
 void print_process_info_help() {
     printf("Usage: ps\n");
@@ -169,6 +171,23 @@ void print_help_my_echo() {
     printf("  [message]: The message to be printed\n");
 }
 
+void print_help_head() {
+  printf("Usage: head -n <lines> <file>\n");
+  printf("Display the first few lines of a file.\n\n");
+
+  printf("Options:\n");
+  printf(" -n <lines>: Specify the number of lines to display\n");
+  printf(" <file>: The name of the file\n");
+}
+
+void print_help_tail() {
+  printf("Usage: tail -n <lines> <file>\n");
+  printf("Display the last few lines of a file.\n\n");
+
+  printf("Options:\n");
+  printf(" -n <lines>: Specify the number of lines to display\n");
+  printf(" <file>: The name of the file\n");
+}
 
 
 void display_help(int argc, char **argv) {
@@ -225,6 +244,12 @@ void display_help(int argc, char **argv) {
         }
         else if (strcmp(command, "echo") == 0) {
            print_help_my_echo();
+        }
+        else if (strcmp(command, "head") == 0) {
+           print_help_head();
+        }
+        else if (strcmp(command, "tail") == 0) {
+           print_help_tail();
         }
         // Add more else if statements for other commands
         else {
