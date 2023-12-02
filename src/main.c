@@ -84,6 +84,8 @@ int main(void) {
     bst_insert(&bst_root, "_mv", my_mv);
     bst_insert(&bst_root, "_rm", my_rm);
     bst_insert(&bst_root, "mkdir", my_mkdir);
+    bst_insert(&bst_root, "tail", tail_command);
+    bst_insert(&bst_root, "head", head_command);
 
     while(1) {
         prompt();
