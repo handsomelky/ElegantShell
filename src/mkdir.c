@@ -3,60 +3,62 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "mkdir.h"
+
+int create(char *dir);
 
 int my_mkdir(int argc, char **argv){
-    if (argc == 2) {
-        // 创建目录
-        if (mkdir(argv[1], 0777) == 0) {
-            printf("Directory created successfully.\n");
-            return 0;  // 表示成功
-        } 
-        else {
-            perror("Error creating directory");
+    int status = 0;   //记录出错原因：0代表没错，1代表目录已经存在,-1代表其他错误
+    if(argc < 2){
+        fprintf(stderr, "Usage: %s [dirction/name]", argv[0]);
             return 1;  // 表示错误
-        }
-    }
-    else if(argc == 3){
-        if(strcmp(argv[1], "-p") == 0){
-            char *tmp = strdup(argv[2]);
-            char *p = tmp;
-            int status = 0;
-            // 逐级检查和创建目录
-            while (*p != '\0') {
-                if (*p == '/') {
-                    *p = '\0'; // 将斜杠替换为字符串终止符
-                    // 检查目录是否存在
-                    struct stat st;
-                    if (stat(tmp, &st) != 0) {
-                        // 如果目录不存在，则创建目录
-                        if (mkdir(tmp, 0777) != 0) {
-                            status = -1;
-                            break;
-                        }
-                    } 
-                    else if (!S_ISDIR(st.st_mode)) {
-                        // 如果路径存在但不是目录，则返回错误
-                        status = -1;
-                        break;
-                    }
-                    *p = '/'; // 恢复原来的斜杠
-                }
-                p++;
-            }
-            // 创建最终目录
-            if (status == 0 && mkdir(tmp, 0777) != 0) {
-                status = -1;
-            }
-            free(tmp);
-        }
-        else{
-            fprintf(stderr, "查询用法:help --%s\n", argv[0]);
-            return 1;  // 表示错误
-        }
     }
     else{
-        fprintf(stderr, "Usage: %s <directory_name>\n", argv[0]);
-        return 1;  // 表示错误
+        if(strcmp(argv[1], "-p") == 0){       //mkdir -p
+            for(int i = 2; i < argc; i++){
+                status = 0;
+                char *tmp = strdup(argv[i]);
+                char *p = tmp;
+                while (*p != '\0' && status != -1) {   // 逐级检查和创建目录 
+                    if (*p == '/'){   //提取每一级目录                     
+                        *p = '\0'; 
+                        status = create(tmp);
+                        *p = '/'; // 恢复原来的斜杠
+                    }
+                    p++;
+                }
+                // 创建最终目录
+                if (status == 0)
+                    create(tmp);
+                free(tmp); 
+            }       
+        }
+        else{
+            for(int i = 1; i < argc; i++){
+                status = 0;
+                status = create(argv[i]);
+            }
+        }
+        if(status !=0){
+           if(status == -1)
+               fprintf(stderr, "查询用法:help --mkdir");  
+           else if(status == 1)
+               fprintf(stderr,"direction has already existed");
+           return 1;
+        }
     }
     return 0;
+}
+
+int create(char *dir)      //创建目录
+{
+    int status = 0;    //记录出错原因：0代表没错，1代表目录已经存在,-1代表其他错误
+    struct stat st;
+    if (stat(dir, &st) !=0) {    //目录不存在
+        if (mkdir(dir, 0777) != 0)   //创建失败
+            status = -1;
+    } 
+    else       //目录存在
+        status = 1;
+    return status;
 }
