@@ -114,10 +114,10 @@ void print_help_my_mv() {
     printf("Move files or directories.\n\n");
 
     printf("Options:\n");
-    printf("  -b: Create a backup of the destination file before overwriting\n");
-    printf("  -i: Prompt before overwriting an existing file\n");
-    printf("  -f: Force move, overwrite the destination file without prompting\n");
-    printf("  -n: Do not overwrite an existing file (no-clobber)\n");
+    printf("  -b: Backup files or directories before overwriting\n");
+    printf("  -i: Prompt before overwriting\n");
+    printf("  -f: Force move, do not prompt for confirmation\n");
+    printf("  -n: Do not overwrite an existing file\n");
     printf("  <source>: The file or directory to move\n");
     printf("  <destination>: The destination path for the move operation\n");
 }
