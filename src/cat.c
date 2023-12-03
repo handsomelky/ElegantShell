@@ -2,6 +2,7 @@
 #include <string.h>
 #include "cat.h"
 
+
 int cat(int argc, char **argv) {
     if (argc < 2) {
         printf("Usage: %s [file1 file2 ...] [-n filename]\n", argv[0]);
