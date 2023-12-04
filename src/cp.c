@@ -41,11 +41,42 @@ int my_cp(int argc, char *argv[]) {
     }
 
     // 解析命令行选项
-    int c;
+    int start_index=1;
     int force = 0, interactive = 0, recursive = 0, verbose = 0, link_ = 0, backup = 0, copy_symlink = 1;
 
-    while ((c = getopt(argc, argv, "drifvlb")) != -1) {
-        switch (c) {
+    // while ((c = getopt(argc, argv, "drifvlb")) != -1) {
+    //     switch (c) {
+    //         case 'd':
+    //             link_ = 1;
+    //             break;
+    //         case 'r':
+    //             recursive = 1;
+    //             break;
+    //         case 'i':
+    //             interactive = 1;
+    //             break;
+    //         case 'f':
+    //             force = 1;
+    //             break;
+    //         case 'v':
+    //             verbose = 1;
+    //             break;
+    //         case 'l':
+    //             link_ = 1;
+    //             copy_symlink = 0;
+    //             break;
+    //         case 'b':
+    //             backup = 1;
+    //             break;
+    //         default:
+    //             exit(EXIT_FAILURE);
+    //     }
+    // }
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
+
+            for (int j = 1; argv[i][j] != '\0'; j++) {
+        switch (argv[i][j]) {
             case 'd':
                 link_ = 1;
                 break;
@@ -70,12 +101,15 @@ int my_cp(int argc, char *argv[]) {
                 break;
             default:
                 exit(EXIT_FAILURE);
-        }
+                }
+            }
+            start_index++;
+        } 
     }
 
     // 确定源路径和目标路径
-    const char *src_path = argv[optind];
-    const char *dest_path = argv[optind + 1];
+    const char *src_path = argv[start_index];
+    const char *dest_path = argv[start_index + 1];
 
     if (link_) {
         // 创建硬链接
