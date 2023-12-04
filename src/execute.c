@@ -2,7 +2,6 @@
 #include "main.h" 
 
 void execute_command(cmd_st cmd, BST_NODE *bst_root,pid_t pid, int *saved_stdout, int *saved_stdin) {
-    // Insert the command execution code here
 
     handle_io_redirection(&cmd.globres.gl_pathc, cmd.globres.gl_pathv, &saved_stdout, &saved_stdin);
 
