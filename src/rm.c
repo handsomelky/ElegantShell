@@ -91,32 +91,56 @@ int my_rm(int argc, char *argv[]) {
     int force = 0;
     int recursive = 0;
     int interactive = 0;
-    optind = 1;
-    int opt;
+    int start_index = 1;
+    
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
 
-    // 解析命令行参数
-    while ((opt = getopt(argc, argv, "fir")) != -1) {
-        switch (opt) {
-            case 'f':
-                force = 1;
-                break;
-            case 'i':
-                interactive = 1;
-                break;
-            case 'r':
-                recursive = 1;
-                break;
-            default:
-                fprintf(stderr, "rm: 用法: %s [-fir] <文件1> [文件2] [文件3] ...\n", argv[0]);
-        }
+            for (int j = 1; argv[i][j] != '\0'; j++) {
+                switch (argv[i][j]) {
+                    case 'f': 
+                        force = 1;
+                        break;
+                    case 'i': 
+                        interactive = 1; 
+                        break;
+                    case 'r': 
+                        recursive = 1;
+                        break;
+                    default:
+                        fprintf(stderr, "rm: 用法: %s [-fir] <文件1> [文件2] [文件3] ...\n", argv[0]);
+                        return -1;
+                }
+            }
+            start_index++;
+        } 
     }
+    
 
-    if (optind >= argc) {
-        fprintf(stderr, "用法: %s [-fir] <文件1> [文件2] [文件3] ...\n", argv[0]);
-    }
+    // // 解析命令行参数
+    // while ((opt = getopt(argc, argv, "fir")) != -1) {
+    //     switch (opt) {
+    //         case 'f':
+    //             force = 1;
+    //             break;
+    //         case 'i':
+    //             interactive = 1;
+    //             break;
+    //         case 'r':
+    //             recursive = 1;
+    //             break;
+    //         default:
+    //             fprintf(stderr, "rm: 用法: %s [-fir] <文件1> [文件2] [文件3] ...\n", argv[0]);
+    //     }
+    // }
+
+    // if (optind >= argc) {
+    //     fprintf(stderr, "用法: %s [-fir] <文件1> [文件2] [文件3] ...\n", argv[0]);
+    // }
+
 
     // 遍历命令行参数中的文件或目录
-    for (int i = optind; i < argc; i++) {
+    for (int i = start_index; i < argc; i++) {
         char *path = argv[i];
 
         struct stat path_stat;
@@ -137,10 +161,10 @@ int my_rm(int argc, char *argv[]) {
                 } else if (S_ISREG(path_stat.st_mode)) {
                     remove_file(path, force, interactive);
                 } else {
-                    fprintf(stderr, "对于 %s，选项的组合无效\n", path);
+                    //fprintf(stderr, "对于 %s，选项的组合无效\n", path);
                 }
             } else {
-                fprintf(stderr, "对于 %s，选项的组合无效\n", path);
+                //fprintf(stderr, "对于 %s，选项的组合无效\n", path);
             }
         }
     }
