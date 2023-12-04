@@ -39,14 +39,42 @@ void make_backup(const char *file_path) {
 }
 
 int my_mv(int argc, char *argv[]) {
-    int opt;
+    int start_index = 1;
     int backup = 0;
     int interactive = 0;
     int force = 0;
     int no_clobber = 0;
     
-    while ((opt = getopt(argc, argv, "bifn")) != -1) {
-        switch (opt) {
+    // while ((opt = getopt(argc, argv, "bifn")) != -1) {
+    //     switch (opt) {
+    //         case 'b':
+    //             backup = 1;
+    //             break;
+    //         case 'i':
+    //             interactive = 1;
+    //             break;
+    //         case 'f':
+    //             force = 1;
+    //             break;
+    //         case 'n':
+    //             no_clobber = 1;
+    //             break;
+    //         default:
+    //             fprintf(stderr, "Usage: %s [-bifnu] <source> <destination>\n", argv[0]);
+    //             exit(EXIT_FAILURE);
+    //     }
+    // }
+
+    // // 剩余的命令行参数是源和目标路径
+    // if (optind + 2 != argc) {
+    //     fprintf(stderr, "Usage: %s [-fir] <source> <destination>\n", argv[0]);
+    //     exit(EXIT_FAILURE);
+    // }
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
+
+            for (int j = 1; argv[i][j] != '\0'; j++) {
+                switch (argv[i][j]) {
             case 'b':
                 backup = 1;
                 break;
@@ -62,17 +90,14 @@ int my_mv(int argc, char *argv[]) {
             default:
                 fprintf(stderr, "Usage: %s [-bifnu] <source> <destination>\n", argv[0]);
                 exit(EXIT_FAILURE);
-        }
+                }
+            }
+            start_index++;
+        } 
     }
 
-    // 剩余的命令行参数是源和目标路径
-    if (optind + 2 != argc) {
-        fprintf(stderr, "Usage: %s [-fir] <source> <destination>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-    const char *source = argv[optind];
-    const char *destination = argv[optind + 1];
+    const char *source = argv[start_index];
+    const char *destination = argv[start_index + 1];
 
     move(source, destination, backup, interactive, force, no_clobber);
 
